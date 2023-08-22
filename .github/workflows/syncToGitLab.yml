@@ -12,7 +12,7 @@ jobs:
       - uses: pixta-dev/repository-mirroring-action@v1 #mirroring
         with:
           target_repo_url:
-            git@gitlab.com:dldnr789/mirroringtest.git   # gitlab-repo url
+            git@lab.ssafy.com:dldnr789/mirroringtest.git   # gitlab-repo url
           ssh_private_key:                              # <-- use 'secrets' to pass credential information.
             ${{ secrets.MIRRORTESTKEY }}                # github에 등록한 keyn name
 
