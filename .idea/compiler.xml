@@ -11,9 +11,8 @@
         <module name="special.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="special.main" target="11" />
-      <module name="special.test" target="11" />
+    <bytecodeTargetLevel target="11">
+      <module name="Special" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
