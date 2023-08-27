@@ -13,9 +13,9 @@ pipeline {
             steps {
                 dir('BackEnd') {
                     // Backend Dockerfile 빌드
-                    sh 'docker-compose -f docker-compose.yml build'
+                    sh 'docker-compose -f ../docker-compose.yml build'
                     // Backend 컨테이너 실행
-                    sh 'docker-compose -f docker-compose.yml up -d server'
+                    sh 'docker-compose -f ../docker-compose.yml up -d server'
                 }
             }
         }
@@ -24,9 +24,9 @@ pipeline {
             steps {
                 dir('FrontEnd') {
                     // Frontend Dockerfile 빌드
-                    sh 'docker-compose -f docker-compose.yml build'
+                    sh 'docker-compose -f ../docker-compose.yml build'
                     // Frontend 컨테이너 실행
-                    sh 'docker-compose -f docker-compose.yml up -d frontend'
+                    sh 'docker-compose -f ../docker-compose.yml up -d frontend'
                 }
             }
         }
@@ -35,7 +35,7 @@ pipeline {
     post {
         always {
             // 빌드 종료 후 Docker 컨테이너 정리
-            sh 'docker-compose -f docker-compose.yml down'
+            sh 'docker-compose -f ../docker-compose.yml down'
         }
     }
 }
