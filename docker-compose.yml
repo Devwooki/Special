@@ -1,5 +1,15 @@
 version: "3"
 services:
+  server:
+    container_name: backend
+    environment:
+      - TZ=Asia/Seoul
+    build:
+      context: ./BackEnd
+      dockerfile: Dockerfile
+    ports:
+      - "9999:9999"
+
   frontend:
     container_name: frontend
     build:
@@ -26,14 +36,6 @@ services:
   #      - --character-set-server=utf8mb4
   #      - --collation-server=utf8mb4_unicode_ci
 
-  server:
-    container_name: server
-    environment:
-      - TZ=Asia/Seoul
-    build:
-      context: ./BackEnd
-      dockerfile: Dockerfile
-    ports:
-      - "9999:9999"
+
 #    depends_on:
 #      - database
