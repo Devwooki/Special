@@ -1,0 +1,30 @@
+# Use Node.js v18 base image
+# FROM : 이미지를 지정해준다.
+FROM node:18
+
+# Set the working directory in the container
+# WORKDIR: RUN, CMD, ENTRYPOINT, ADD, COPY 에 정의된 명령어를 실행하는 작업 디렉터리 지정
+WORKDIR /app
+
+# Copy package.json and package-lock.json to container
+COPY package*.json ./
+
+# Install project dependencies
+# RUN: 이미지를 빌드하며 실행할 명령어 지정
+RUN npm install
+
+# Copy the entire project to the container
+# COPY: 이미지에 파일이나 폴더를 추가
+COPY . .
+
+# Build the project
+# RUN npm run build
+
+
+# Expose the port your app is running on
+# 이미지가 통신에 사용할 포트를 명시적으로 지정한다.
+EXPOSE 5173
+CMD ["npm", "start"]
+
+
+
