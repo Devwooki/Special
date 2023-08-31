@@ -1,6 +1,11 @@
+# 도커 컴포즈 버전 작성
 version: "3"
-services:
-  server:
+
+# 도커 컴포즈로 수행할 항목을 작성하다. service, networks, volumes: 등 존재
+
+services: #컨테이너를 정의하는 것
+  special-be:
+    image: minyumanyu/special-be:latest
     container_name: backend
     environment:
       - TZ=Asia/Seoul
@@ -10,7 +15,8 @@ services:
     ports:
       - "9999:9999"
 
-  frontend:
+  special-fe:
+    image: minyumanyu/special-fe:latest
     container_name: frontend
     build:
       context: ./FrontEnd

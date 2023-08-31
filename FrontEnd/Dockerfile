@@ -1,6 +1,6 @@
 # Use Node.js v18 base image
 # FROM : 이미지를 지정해준다.
-FROM node:18
+FROM node:latest as frontend-builder
 
 # Set the working directory in the container
 # WORKDIR: RUN, CMD, ENTRYPOINT, ADD, COPY 에 정의된 명령어를 실행하는 작업 디렉터리 지정
@@ -23,7 +23,7 @@ RUN rm -rf /etc/nginx/conf.d
 COPY conf /etc/nginx
 
 # 위에서 생성한 앱의 빌드 산출물을 nginx의 샘플 앱이 사용하는 폴더로 이동
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=frontend-builder /app/build /usr/share/nginx/html
 
 # 5173 포트 오픈하고 nginx 실행
 EXPOSE 5173
