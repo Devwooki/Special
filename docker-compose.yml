@@ -5,8 +5,8 @@ version: "3"
 
 services: #컨테이너를 정의하는 것
   special-be:
-    image: minyumanyu/special-be:latest
-    container_name: special-be
+    image: minyumanyu/special_be:latest
+    container_name: special_be
     environment:
       - TZ=Asia/Seoul
     build:
@@ -16,15 +16,15 @@ services: #컨테이너를 정의하는 것
       - "9999:9999"
 
   special-fe:
-    image: minyumanyu/special-fe:latest
-    container_name: special-fe
+    image: minyumanyu/special_fe:latest
+    container_name: special_fe
     build:
       context: ./FrontEnd
       dockerfile: Dockerfile
     environment:
       - TZ=Asia/Seoul
     ports:
-      - "5173:5173"
+      - "5173:5173" #호스트의 5173포트를 special_fe컨테이너의 5173포트와 매핑시킨다.
 
   #  database:
   #    container_name: database
