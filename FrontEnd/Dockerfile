@@ -27,5 +27,5 @@ COPY conf /etc/nginx
 COPY --from=frontend-builder /app/dist /usr/share/nginx/html
 
 # 5173 포트 오픈하고 nginx 실행
-EXPOSE 3000
+EXPOSE 5173
 CMD ["nginx", "-g", "daemon off;"]
