@@ -1,6 +1,6 @@
 # Use Node.js v18 base image
 # FROM : 이미지를 지정해준다.
-FROM node:latest as frontend-builder
+FROM node:18-alpine  as frontend-builder
 
 # Set the working directory in the container
 # WORKDIR: RUN, CMD, ENTRYPOINT, ADD, COPY 에 정의된 명령어를 실행하는 작업 디렉터리 지정
@@ -20,8 +20,8 @@ RUN npm run build
 # 이후 엔진엑스를 적용한다.
 FROM nginx:latest
 # ngix의 기본 설정을 삭제하고 앱에서 설정한 파일을 복사
-# RUN rm -rf /etc/nginx/conf.d
-# COPY conf /etc/nginx
+RUN rm -rf /etc/nginx/conf.d
+COPY conf /etc/nginx
 
 # 위에서 생성한 앱의 빌드 산출물을 nginx의 샘플 앱이 사용하는 폴더로 이동
 COPY --from=frontend-builder /app/build /usr/share/nginx/html
