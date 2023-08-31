@@ -6,7 +6,7 @@ version: "3"
 services: #컨테이너를 정의하는 것
   special-be:
     image: minyumanyu/special-be:latest
-    container_name: backend
+    container_name: special-be
     environment:
       - TZ=Asia/Seoul
     build:
@@ -17,7 +17,7 @@ services: #컨테이너를 정의하는 것
 
   special-fe:
     image: minyumanyu/special-fe:latest
-    container_name: frontend
+    container_name: special-fe
     build:
       context: ./FrontEnd
       dockerfile: Dockerfile
