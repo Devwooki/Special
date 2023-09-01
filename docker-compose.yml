@@ -1,28 +1,85 @@
 # 도커 컴포즈 버전 작성
 version: "3"
 
+# 도커 네트워크
+networks:
+  special_network:
 # 도커 컴포즈로 수행할 항목을 작성하다. service, networks, volumes: 등 존재
 
 services: #컨테이너를 정의하는 것
+  #=========================================
+  # reverse proxy를 위한 외부 nginx 선언
+  #=========================================
+  external_nginx:
+    image: nginx:latest
+    container_name : external_nginx
+    networks:
+      - special_network
+    volumes:
+      - ./special_config/nginx:/etc/nginx/conf.d
+      - ./special_config/certbot/conf:/etc/letsencrypt #nginx
+      - ./special_config/certbot/www:/var/www/certbot
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    expose:
+      - "80"
+      - "443"
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    # nginx 실행 명령어 : 무한루프를 만들어 주기적으로 다시 로드하는 역할
+    # 6시간 마다 재 로드를 수행한다
+    # & : 백그라운드에서 동작토록 한다.
+    # daemon off : 데몬 모드로 실행 -> -g를 통해 전역(global)하게 사용 가능하며 포그라운드엣 ㅓ동작토록 한다.
+
+  #=========================================
+  # certbot 선언
+  #=========================================
+  certbot:
+    image: certbot/certbot:latest
+    container_name: special_certbot
+    networks:
+      - special_network
+    volumes:
+      - ~/special_config/certbot/conf:/etc/letsencrypt
+      - ~/special_config/certbot/www:/var/www/certbot
+    restart: unless-stopped
+
+  #=========================================
+  # Springboot 선언
+  #=========================================
   special-be:
     image: minyumanyu/special_be:latest
     container_name: special_be
+    networks:
+      - special_network
     environment:
       - TZ=Asia/Seoul
     build:
       context: ./BackEnd
       dockerfile: Dockerfile
+    volumes :
+      - ~/special_config/spring:/var/jenkins_home/workspace/Special_auto_build/BackEnd/src/main/resources:ro
+    restart: always
     ports:
       - "9999:9999"
 
+  #=========================================
+  # react 선언
+  #=========================================
   special-fe:
     image: minyumanyu/special_fe:latest
     container_name: special_fe
+    networks:
+      - special_network
+    environment:
+          - TZ=Asia/Seoul
     build:
       context: ./FrontEnd
       dockerfile: Dockerfile
-    environment:
-      - TZ=Asia/Seoul
+    volumes:
+      - ~/special_config/react/setupProxy.js:/var/jenkins_home/workspace/Special_auto_build/FrontEnd/src/setupProxy.js:ro
+    restart: always
     ports:
       - "3000:5173" #호스트의 5173포트를 special_fe컨테이너의 5173포트와 매핑시킨다.
 
@@ -45,3 +102,10 @@ services: #컨테이너를 정의하는 것
 
 #    depends_on:
 #      - database
+
+
+# react, spring은 restart : always
+# nginx, certbot은 restart : unless-stopeed?
+# 중요한 서비스는 종료되도 다시 시작되도록 보장해야함
+# ssl인증서와 웹 서버 역할을 하기 떄문에 서비스를 중단할 필요가 없다
+# 명시적으로 수동 중지 하지 않는 이상 계속 실행되게
