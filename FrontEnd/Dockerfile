@@ -21,13 +21,14 @@ RUN npm run build
 FROM nginx:latest
 
 # ngix의 기본 설정을 삭제하고 앱에서 설정한 파일을 복사
+# 오직 react build 파일을 실행하기 위한 nginx이기 때문에 신경쓰지 말자.
 RUN rm -rf /etc/nginx/conf.d
 COPY staticConf /etc/nginx
 
 # 위에서 생성한 앱의 빌드 산출물을 nginx의 샘플 앱이 사용하는 폴더로 이동
 COPY --from=frontend-builder /app/dist /usr/share/nginx/html
 
-# 5173 포트 오픈하고 nginx 실행
+# 컨테이너 내부 끼리 사용할 port를 허용해준다.5173 nginx 실행
 EXPOSE 5173
 CMD ["nginx", "-g", "daemon off;"]
 

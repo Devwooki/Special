@@ -11,21 +11,26 @@ services: #컨테이너를 정의하는 것
   # reverse proxy를 위한 외부 nginx 선언
   #=========================================
   external_nginx:
-    image: nginx:latest
+    image: nginx:latest #사용되는 이미지
     container_name : external_nginx
+    # 도커 내부 네트워크
     networks:
       - special_network
+    # 호스트와 컨테이너의 데이터를 바인딩한다(볼륨 바인딩)
+    # jenkins에 의해 compose가 실행되므로 var/jenkins_home하위 디렉토리에서 데이터를 가져온다.
     volumes:
-      - ./special_config/nginx:/etc/nginx/conf.d
-      - ./special_config/certbot/conf:/etc/letsencrypt #nginx
-      - ./special_config/certbot/www:/var/www/certbot
+      - /var/jenkins_home/special_config/nginx:/etc/nginx/conf.d
+      - /var/jenkins_home/special_config/certbot/conf:/etc/letsencrypt #nginx
+      - /var/jenkins_home/special_config/certbot/www:/var/www/certbot
     restart: unless-stopped
+    # 외부에 공개할 포트들을 선언한다.
     ports:
       - "80:80"
       - "443:443"
     expose:
       - "80"
       - "443"
+    # certbot에서 갱신된 인증서를 확인하는 코드
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     # nginx 실행 명령어 : 무한루프를 만들어 주기적으로 다시 로드하는 역할
     # 6시간 마다 재 로드를 수행한다
@@ -41,15 +46,17 @@ services: #컨테이너를 정의하는 것
     networks:
       - special_network
     volumes:
-      - ~/special_config/certbot/conf:/etc/letsencrypt
-      - ~/special_config/certbot/www:/var/www/certbot
+      - /var/jenkins_home/special_config/certbot/conf:/etc/letsencrypt
+      - /var/jenkins_home/special_config/certbot/www:/var/www/certbot
     restart: unless-stopped
+    # 자동으로 읹ㅇ서를 갱신 해주는 코드다.
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   #=========================================
   # Springboot 선언
   #=========================================
   special-be:
-    image: minyumanyu/special_be:latest
+    image: minyumanyu/special_be:latest # 도커 허브에 올리면 그것을 그대로 이용해도 된다.
     container_name: special_be
     networks:
       - special_network
@@ -59,10 +66,10 @@ services: #컨테이너를 정의하는 것
       context: ./BackEnd
       dockerfile: Dockerfile
     volumes :
-      - ~/special_config/spring:/var/jenkins_home/workspace/Special_auto_build/BackEnd/src/main/resources:ro
+      - /var/jenkins_home/special_config/spring:/var/jenkins_home/workspace/Special_auto_build/BackEnd/src/main/resources:ro
     restart: always
-    ports:
-      - "9999:9999"
+    expose:
+      - "9999"
 
   #=========================================
   # react 선언
@@ -78,10 +85,14 @@ services: #컨테이너를 정의하는 것
       context: ./FrontEnd
       dockerfile: Dockerfile
     volumes:
-      - ~/special_config/react/setupProxy.js:/var/jenkins_home/workspace/Special_auto_build/FrontEnd/src/setupProxy.js:ro
+      - /var/jenkins_home/special_config/react/setupProxy.js:/var/jenkins_home/workspace/Special_auto_build/FrontEnd/src/setupProxy.js:ro
     restart: always
-    ports:
-      - "3000:5173" #호스트의 5173포트를 special_fe컨테이너의 5173포트와 매핑시킨다.
+    # expose 컨테이너 내부에서 도커 컨테이너에게 열어주는 포트
+    expose:
+      - "5173"
+    # ports: 외부 nginx를 적용해 호스트에 직접 접근할 필요가 없기 때문에 port가 아닌 expose로 변겨한다.
+    #  - "3000:5173" #호스트의 5173포트를 special_fe컨테이너의 5173포트와 매핑시킨다.
+    # - "3000"
 
   #  database:
   #    container_name: database
