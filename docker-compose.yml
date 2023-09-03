@@ -19,10 +19,13 @@ services: #컨테이너를 정의하는 것
     # 호스트와 컨테이너의 데이터를 바인딩한다(볼륨 바인딩)
     # jenkins에 의해 compose가 실행되므로 var/jenkins_home하위 디렉토리에서 데이터를 가져온다.
     volumes:
-      - ~/special_config/nginx:/etc/nginx/conf.d
-      - ~/special_config/certbot/conf:/etc/letsencrypt #nginx
-      - ~/special_config/certbot/www:/var/www/certbot
+      - /home/ubuntu/special_config/nginx:/etc/nginx/conf.d
+      - /home/ubuntu/special_config/certbot/conf:/etc/letsencrypt #nginx
+      - /home/ubuntu/special_config/certbot/www:/var/www/certbot
     restart: unless-stopped
+    depends_on: :
+      - special-be
+      - special-fe
     # 외부에 공개할 포트들을 선언한다.
     ports:
       - "80:80"
@@ -46,8 +49,8 @@ services: #컨테이너를 정의하는 것
     networks:
       - special_network
     volumes:
-      - ~/special_config/certbot/conf:/etc/letsencrypt
-      - ~/special_config/certbot/www:/var/www/certbot
+      - /home/ubuntu/special_config/certbot/conf:/etc/letsencrypt
+      - /home/ubuntu/special_config/certbot/www:/var/www/certbot
     restart: unless-stopped
     # 자동으로 읹ㅇ서를 갱신 해주는 코드다.
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
@@ -66,7 +69,7 @@ services: #컨테이너를 정의하는 것
       context: ./BackEnd
       dockerfile: Dockerfile
     volumes :
-      - ~/special_config/spring:/var/jenkins_home/workspace/Special_auto_build/BackEnd/src/main/resources:ro
+      - /home/ubuntu/special_config/spring:/var/jenkins_home/workspace/Special_auto_build/BackEnd/src/main/resources:ro
     restart: always
     expose:
       - "9999"
@@ -85,7 +88,7 @@ services: #컨테이너를 정의하는 것
       context: ./FrontEnd
       dockerfile: Dockerfile
     volumes:
-      - ~/special_config/react/setupProxy.js:/var/jenkins_home/workspace/Special_auto_build/FrontEnd/src/setupProxy.js:ro
+      - /home/ubuntu/special_config/react/setupProxy.js:/var/jenkins_home/workspace/Special_auto_build/FrontEnd/src/setupProxy.js:ro
     restart: always
     # expose 컨테이너 내부에서 도커 컨테이너에게 열어주는 포트
     expose:
