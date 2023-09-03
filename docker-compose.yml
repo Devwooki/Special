@@ -23,7 +23,7 @@ services: #컨테이너를 정의하는 것
       - /home/ubuntu/special_config/certbot/conf:/etc/letsencrypt #nginx
       - /home/ubuntu/special_config/certbot/www:/var/www/certbot
     restart: unless-stopped
-    depends_on: :
+    depends_on:
       - special-be
       - special-fe
     # 외부에 공개할 포트들을 선언한다.
