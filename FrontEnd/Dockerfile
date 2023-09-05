@@ -29,8 +29,8 @@ COPY staticConf /etc/nginx
 COPY --from=frontend-builder /app/dist /usr/share/nginx/html
 
 # 에러가 나타나면 페이지(html파일)을 nginx로 복사한다.
-COPY ./40 /usr/share/nginx/html
-COPY staticConf /usr/share/nginx/html
+COPY ./404.html /usr/share/nginx/html
+COPY ./50x.html /usr/share/nginx/html
 
 # 컨테이너 내부 끼리 사용할 port를 허용해준다.5173 nginx 실행
 EXPOSE 5173
