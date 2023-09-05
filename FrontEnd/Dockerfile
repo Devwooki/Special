@@ -28,6 +28,10 @@ COPY staticConf /etc/nginx
 # 위에서 생성한 앱의 빌드 산출물을 nginx의 샘플 앱이 사용하는 폴더로 이동
 COPY --from=frontend-builder /app/dist /usr/share/nginx/html
 
+# 에러가 나타나면 페이지(html파일)을 nginx로 복사한다.
+COPY ./40 /usr/share/nginx/html
+COPY staticConf /usr/share/nginx/html
+
 # 컨테이너 내부 끼리 사용할 port를 허용해준다.5173 nginx 실행
 EXPOSE 5173
 CMD ["nginx", "-g", "daemon off;"]
