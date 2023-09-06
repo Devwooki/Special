@@ -2,7 +2,8 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=react,java,windows,macos,visualstudiocode,intellij
 
 ## 설정 파일 ##
-application.properties
+*/application.properties
+*/application.yml
 .env.*
 
 

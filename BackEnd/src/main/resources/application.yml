@@ -1,2 +1,37 @@
 server:
   port: 9999
+
+# DB settings
+spring:
+  jpa:
+    hibernate:
+      ddl-auto=update: create
+    database: mysql
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+  datasource:
+    username: special
+    password: specialbe-303
+    url: jdbc:mysql://15.164.35.221:3306/convenience?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+  servlet:
+      multipart:
+        max-file-size: 15MB
+        max-request-size: 15MB
+
+# S3 Settings
+cloud:
+  aws:
+    credentials:
+      access-key: AKIAX6RT2XTCOP3S4K7H
+      secret-key: 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
+    s3:
+      bucket: neighbrew
+      dir: /neighbrew
+    region:
+      auto: false
+      static: ap-northeast-2
+    stack:
+      auto: false
