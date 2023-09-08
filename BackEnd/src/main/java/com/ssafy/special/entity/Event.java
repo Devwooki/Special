@@ -13,7 +13,7 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long eventId;
 
-    @Column(nullable = false, columnDefinition = "varchar(255)")
+    @Column(nullable = false)
     String eventName;
 
     @Enumerated(EnumType.STRING)

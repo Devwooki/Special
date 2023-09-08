@@ -1,6 +1,7 @@
 package com.ssafy.special.entity;
 
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,7 +20,7 @@ public class UserLikeRecipe {
     @JoinColumn(name="recipe_id")
     Recipe recipe;
 
-    @Column(nullable = false, columnDefinition = "boolean default false")
+    @ColumnDefault("false")
     boolean isDeleted;
 
     @Column(columnDefinition = "TIMESTAMP")

@@ -1,6 +1,7 @@
 package com.ssafy.special.entity;
 
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,14 +14,14 @@ public class Product {
     @Column(name ="product_id")
     Long productId;
 
-    @Column(nullable = false, columnDefinition = "varchar(255)")
+    @Column(nullable = false)
     String producetName;
 
     @Column(nullable = false)
     @Lob
     String productImg;
 
-    @Column(nullable = false, columnDefinition = "int default 0")
+    @ColumnDefault("0")
     Long price;
 
     @Column(nullable = false)

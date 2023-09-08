@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -39,7 +40,7 @@ public class User {
     boolean mailReceive;
 
     @OneToMany(mappedBy = "user")
-    private HashSet<UserLikeProd> likeProducts = new HashSet<>();
+    private Set<UserLikeProd> likeProducts = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
     private List<UserLikeRecipe> likeRecipes = new LinkedList<>();

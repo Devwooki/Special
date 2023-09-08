@@ -15,8 +15,9 @@ public class RecipeIngredient {
     @JoinColumn(name = "recipe_id")
     Recipe recipe;
 
-
-    //Product product;
+    @ManyToOne
+    @JoinColumn(name = "product_id") // 재료 테이블과 연결하는 컬럼
+    Product product;
 
     @Column
     Long ingredientSeq;

@@ -1,6 +1,7 @@
 package com.ssafy.special.entity;
 
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,20 +17,20 @@ public class Recipe {
     @JoinColumn(name="writer_id")
     User writer;
 
-    @Column(nullable = false, columnDefinition = "varchar(255)")
+    @Column(nullable = false)
     String recipeName;
 
-    @Column(nullable = false, columnDefinition = "varchar(255)")
+    @Column(nullable = false)
     String recipeSimple;
 
     @Lob
     @Column(nullable = false)
     String recipeDesc;
 
-    @Column(nullable = false, columnDefinition = "default 0")
+    @ColumnDefault("0")
     Long views;
 
-    @Column(nullable = false, columnDefinition = "default 0")
+    @ColumnDefault("0")
     Long likes;
 
     @Column(nullable = false, columnDefinition = "boolean default false")
