@@ -5,7 +5,7 @@ server:
 spring:
   jpa:
     hibernate:
-      ddl-auto=update: create
+      ddl-auto: update
     database: mysql
     show-sql: true
     properties:
